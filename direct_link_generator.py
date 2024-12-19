@@ -1,3 +1,5 @@
+# direct_link_generator.py
+
 from cloudscraper import create_scraper
 from hashlib import sha256
 from http.cookiejar import MozillaCookieJar
@@ -13,15 +15,39 @@ from urllib3.util.retry import Retry
 from uuid import uuid4
 from base64 import b64decode
 
-from bot import config_dict
-from ...ext_utils.exceptions import DirectDownloadLinkException
-from ...ext_utils.help_messages import PASSWORD_ERROR_MESSAGE
-from ...ext_utils.links_utils import is_share_link
-from ...ext_utils.status_utils import speed_string_to_bytes
+# Hapus impor yang tidak digunakan
+# from bot import config_dict
+# from ...ext_utils.exceptions import DirectDownloadLinkException
+# from ...ext_utils.help_messages import PASSWORD_ERROR_MESSAGE
+# from ...ext_utils.links_utils import is_share_link
+# from ...ext_utils.status_utils import speed_string_to_bytes
 
 user_agent = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0"
 )
+
+class DirectDownloadLinkException(Exception):
+    pass
+
+PASSWORD_ERROR_MESSAGE = "This link is password protected. Please provide the password using the format link::password."
+
+def is_share_link(link):
+    return any(x in link for x in ["gdtot", "filepress", "sharer"])
+
+def speed_string_to_bytes(size: str) -> int:
+    UNITS = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+    size = size.upper().strip()
+    if " " in size:
+        num, unit = size.split(" ")
+    else:
+        # Handle cases without space, e.g., "10MB"
+        num = ''.join(filter(str.isdigit, size))
+        unit = ''.join(filter(str.isalpha, size))
+
+    if unit not in UNITS:
+        raise ValueError(f"Unknown unit: {unit}")
+
+    return int(float(num) * (1024 ** UNITS.index(unit))))
 
 
 def direct_link_generator(link):
