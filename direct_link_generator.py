@@ -47,8 +47,7 @@ def speed_string_to_bytes(size: str) -> int:
     if unit not in UNITS:
         raise ValueError(f"Unknown unit: {unit}")
 
-    return int(float(num) * (1024 ** UNITS.index(unit))))
-
+    return int(float(num) * (1024 ** UNITS.index(unit)))
 
 def direct_link_generator(link):
     """direct links generator"""
@@ -228,6 +227,9 @@ def direct_link_generator(link):
         raise DirectDownloadLinkException(f"ERROR: R.I.P {domain}")
     else:
         raise DirectDownloadLinkException(f"No Direct link function found for {link}")
+
+# Tambahkan semua fungsi terkait lainnya yang diperlukan (misal: yandex_disk, mediafire, etc.)
+# ...
 
 
 def get_captcha_token(session, params):
